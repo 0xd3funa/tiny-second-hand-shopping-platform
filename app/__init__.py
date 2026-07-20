@@ -1,6 +1,7 @@
 from pathlib import Path
 
-from flask import Flask
+from flask import Flask, flash, redirect, session, url_for
+from flask_login import current_user, logout_user
 
 from app.extensions import (
     csrf,
@@ -55,10 +56,29 @@ def create_app(test_config=None):
     from app.auth import auth_bp
     from app.main import main_bp
     from app.products import products_bp
+    from app.reports import reports_bp
 
     app.register_blueprint(main_bp)
     app.register_blueprint(auth_bp)
     app.register_blueprint(products_bp)
+    app.register_blueprint(reports_bp)
+
+    @app.before_request
+    def enforce_active_account():
+        if (
+            current_user.is_authenticated
+            and current_user.status != "active"
+        ):
+            logout_user()
+            session.clear()
+
+            flash(
+                "안전 조치로 계정 이용이 중지되었습니다.",
+                "error",
+            )
+            return redirect(url_for("auth.login"))
+
+        return None
 
     @app.after_request
     def add_security_headers(response):

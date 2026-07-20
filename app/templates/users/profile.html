@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block title %}{{ profile_user.display_name }}의 기록 | Tiny Market{% endblock %}
+
+{% block content %}
+<section class="archive-profile">
+    <div class="archive-profile-header">
+        <div>
+            <p class="eyebrow">KEEPER OF OBJECTS</p>
+            <h1>{{ profile_user.display_name }}</h1>
+            <p class="archive-id">@{{ profile_user.username }}</p>
+        </div>
+
+        {% if current_user.is_authenticated
+              and current_user.id != profile_user.id
+              and not profile_user.is_admin
+        %}
+            <a
+                class="report-link"
+                href="{{ url_for(
+                    'reports.report_user',
+                    user_id=profile_user.id
+                ) }}"
+            >
+                사용자 안전 기록
+            </a>
+        {% endif %}
+    </div>
+
+    <div class="archive-note">
+        <span class="archive-note-label">소개 기록</span>
+        <p>
+            {% if profile_user.bio %}
+                {{ profile_user.bio }}
+            {% else %}
+                아직 소개 기록이 없습니다.
+            {% endif %}
+        </p>
+    </div>
+</section>
+
+<section class="product-section">
+    <div class="section-heading">
+        <div>
+            <p class="eyebrow">OBJECT ARCHIVE</p>
+            <h2>{{ profile_user.display_name }}님의 물건 기록</h2>
+        </div>
+    </div>
+
+    {% if products %}
+        <div class="product-grid">
+            {% for product in products %}
+                {% include "products/_card.html" %}
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="empty-state">
+            <h3>공개된 물건 기록이 없습니다.</h3>
+        </div>
+    {% endif %}
+</section>
+{% endblock %}

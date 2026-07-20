@@ -29,6 +29,7 @@
         </p>
 
         <h1>{{ product.name }}</h1>
+
         <p class="product-price">
             {{ "{:,}".format(product.price) }}원
         </p>
@@ -36,16 +37,25 @@
         <dl class="product-meta">
             <div>
                 <dt>판매자</dt>
-                <dd>{{ product.seller.display_name }}</dd>
+                <dd>
+                    <a href="{{ url_for(
+                        'main.user_profile',
+                        user_id=product.seller.id
+                    ) }}">
+                        {{ product.seller.display_name }}
+                    </a>
+                </dd>
             </div>
 
             <div>
                 <dt>등록일</dt>
-                <dd>{{ product.created_at.strftime("%Y-%m-%d") }}</dd>
+                <dd>
+                    {{ product.created_at.strftime("%Y-%m-%d") }}
+                </dd>
             </div>
         </dl>
 
-                <section class="product-description">
+        <section class="product-description">
             <h2>상품 설명</h2>
             <p>{{ product.description }}</p>
         </section>
@@ -74,11 +84,27 @@
                         name="csrf_token"
                         value="{{ csrf_token() }}"
                     >
-                    <button class="danger-button" type="submit">
+
+                    <button
+                        class="danger-button"
+                        type="submit"
+                    >
                         상품 삭제
                     </button>
                 </form>
             </section>
+        {% endif %}
+
+        {% if current_user.is_authenticated and current_user.id != product.seller_id and product.status != "blocked" %}
+            <a
+                class="report-link"
+                href="{{ url_for(
+                    'reports.report_product',
+                    product_id=product.id
+                ) }}"
+            >
+                이 상품 안전 기록
+            </a>
         {% endif %}
     </div>
 </article>

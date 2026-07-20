@@ -1,11 +1,13 @@
 :root {
     color-scheme: light;
-    --background: #f6f7f3;
-    --surface: #ffffff;
-    --text: #1d2922;
-    --muted: #66736b;
-    --primary: #16784d;
-    --border: #dfe5df;
+    --background: #f3efe5;
+    --surface: #fffdf7;
+    --text: #20342b;
+    --muted: #6e756c;
+    --primary: #255f48;
+    --accent: #e98b63;
+    --ink-blue: #395b70;
+    --border: #d8d2c3;
 }
 
 * {
@@ -584,4 +586,143 @@ body {
 
 .danger-button:hover {
     background: #fff0ef;
+}
+body {
+    background-image:
+        radial-gradient(circle at 10% 10%, rgb(233 139 99 / 8%), transparent 28%),
+        linear-gradient(rgb(32 52 43 / 3%) 1px, transparent 1px);
+    background-size: auto, 100% 28px;
+}
+
+.brand {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+}
+
+.brand small {
+    padding: 2px 6px;
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    font-size: 0.68rem;
+    letter-spacing: 0.08em;
+}
+
+.archive-profile {
+    margin-block: 48px 28px;
+    padding: 36px;
+    border: 1px solid var(--border);
+    border-left: 8px solid var(--primary);
+    background: var(--surface);
+    box-shadow: 8px 8px 0 rgb(37 95 72 / 10%);
+}
+
+.archive-profile-header {
+    display: flex;
+    align-items: start;
+    justify-content: space-between;
+    gap: 24px;
+}
+
+.archive-profile h1 {
+    margin-block: 4px;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+}
+
+.archive-id {
+    margin: 0;
+    color: var(--muted);
+    font-family: ui-monospace, monospace;
+}
+
+.archive-note {
+    margin-top: 28px;
+    padding-top: 20px;
+    border-top: 1px dashed var(--border);
+}
+
+.archive-note-label {
+    color: var(--ink-blue);
+    font-size: 0.78rem;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+}
+
+.safety-ticket {
+    position: relative;
+    width: min(680px, 100%);
+    margin: 52px auto;
+    padding: 44px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    box-shadow: 10px 10px 0 rgb(57 91 112 / 12%);
+}
+
+.safety-ticket::before,
+.safety-ticket::after {
+    position: absolute;
+    top: 50%;
+    width: 22px;
+    height: 44px;
+    border: 1px solid var(--border);
+    background: var(--background);
+    content: "";
+    transform: translateY(-50%);
+}
+
+.safety-ticket::before {
+    left: -1px;
+    border-left: 0;
+    border-radius: 0 24px 24px 0;
+}
+
+.safety-ticket::after {
+    right: -1px;
+    border-right: 0;
+    border-radius: 24px 0 0 24px;
+}
+
+.safety-ticket-number {
+    margin-bottom: 28px;
+    padding-bottom: 12px;
+    border-bottom: 1px dashed var(--border);
+    color: var(--ink-blue);
+    font-family: ui-monospace, monospace;
+    font-size: 0.78rem;
+    letter-spacing: 0.08em;
+}
+
+.safety-target {
+    padding: 14px 16px;
+    border-left: 4px solid var(--accent);
+    background: rgb(233 139 99 / 10%);
+}
+
+.ticket-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.report-link {
+    display: inline-block;
+    margin-top: 16px;
+    color: #9a3b2e;
+    font-size: 0.9rem;
+    font-weight: 700;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+}
+
+@media (max-width: 600px) {
+    .archive-profile-header,
+    .ticket-actions {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .safety-ticket {
+        margin-block: 24px;
+        padding: 30px 24px;
+    }
 }

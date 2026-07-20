@@ -4,23 +4,16 @@
 
 {% block content %}
 <section class="hero">
-    <p class="eyebrow">SECURE SECOND-HAND MARKET</p>
-    <h1>안전하게 시작하는 작은 중고거래</h1>
+    <p class="eyebrow">SECOND LIFE ARCHIVE</p>
+    <h1>물건의 다음 이야기가 시작되는 작은 장터</h1>
     <p>
-        상품을 등록하고 이웃과 소통할 수 있는
-        Tiny Second-hand Shopping Platform입니다.
+        한 번 쓰인 물건이 새로운 사람을 만나 다시 이야기를 이어갑니다.
     </p>
 
     <form class="search-form" method="get" action="{{ url_for('main.index') }}">
         <label class="sr-only" for="search-query">상품 검색</label>
-        <input
-            id="search-query"
-            name="q"
-            type="search"
-            maxlength="100"
-            value="{{ query }}"
-            placeholder="찾고 있는 상품을 검색해 보세요."
-        >
+        <input id="search-query" name="q" type="search" maxlength="100" value="{{ query }}"
+            placeholder="찾고 있는 상품을 검색해 보세요.">
         <button type="submit">검색</button>
     </form>
 </section>
@@ -31,67 +24,64 @@
             <p class="eyebrow">MARKET</p>
             <h2>
                 {% if query %}
-                    '{{ query }}' 검색 결과
+                '{{ query }}' 검색 결과
                 {% else %}
-                    최근 등록 상품
+                최근 등록 상품
                 {% endif %}
             </h2>
         </div>
 
         {% if current_user.is_authenticated %}
-            <a
-                class="secondary-button"
-                href="{{ url_for('products.create') }}"
-            >
-                새 상품 등록
-            </a>
+        <a class="secondary-button" href="{{ url_for('products.create') }}">
+            새 상품 등록
+        </a>
         {% endif %}
     </div>
 
     {% if products %}
-        <div class="product-grid">
-            {% for product in products %}
-                {% include "products/_card.html" %}
-            {% endfor %}
-        </div>
+    <div class="product-grid">
+        {% for product in products %}
+        {% include "products/_card.html" %}
+        {% endfor %}
+    </div>
     {% else %}
-        <div class="empty-state">
-            {% if query %}
-                <h3>검색 결과가 없습니다.</h3>
-                <p>다른 검색어를 입력해 보세요.</p>
-            {% else %}
-                <h3>아직 등록된 상품이 없습니다.</h3>
-                <p>첫 번째 상품을 등록해 보세요.</p>
-            {% endif %}
-        </div>
+    <div class="empty-state">
+        {% if query %}
+        <h3>검색 결과가 없습니다.</h3>
+        <p>다른 검색어를 입력해 보세요.</p>
+        {% else %}
+        <h3>아직 등록된 상품이 없습니다.</h3>
+        <p>첫 번째 상품을 등록해 보세요.</p>
+        {% endif %}
+    </div>
     {% endif %}
 
     {% if pagination.pages > 1 %}
-        <nav class="pagination" aria-label="상품 페이지">
-            {% if pagination.has_prev %}
-                <a href="{{ url_for(
+    <nav class="pagination" aria-label="상품 페이지">
+        {% if pagination.has_prev %}
+        <a href="{{ url_for(
                     'main.index',
                     q=query,
                     page=pagination.prev_num
                 ) }}">
-                    이전
-                </a>
-            {% endif %}
+            이전
+        </a>
+        {% endif %}
 
-            <span>
-                {{ pagination.page }} / {{ pagination.pages }}
-            </span>
+        <span>
+            {{ pagination.page }} / {{ pagination.pages }}
+        </span>
 
-            {% if pagination.has_next %}
-                <a href="{{ url_for(
+        {% if pagination.has_next %}
+        <a href="{{ url_for(
                     'main.index',
                     q=query,
                     page=pagination.next_num
                 ) }}">
-                    다음
-                </a>
-            {% endif %}
-        </nav>
+            다음
+        </a>
+        {% endif %}
+    </nav>
     {% endif %}
 </section>
 {% endblock %}

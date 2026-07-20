@@ -1,67 +1,57 @@
 <!doctype html>
 <html lang="ko">
+
 <head>
     <meta charset="utf-8">
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1"
-    >
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{% block title %}Tiny Market{% endblock %}</title>
-    <link
-        rel="stylesheet"
-        href="{{ url_for('static', filename='css/style.css') }}"
-    >
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
+
 <body>
     <header class="site-header">
         <nav class="container navigation">
             <a class="brand" href="{{ url_for('main.index') }}">
-                Tiny Market
+                <span>Tiny Market</span>
+                <small>다시장</small>
             </a>
 
             <div class="nav-links">
                 {% if current_user.is_authenticated %}
-                    <span>{{ current_user.display_name }}님</span>
-                    <a href="{{ url_for('products.create') }}">상품 등록</a>
-                    <a href="{{ url_for('products.mine') }}">내 상품</a>
-                    <a href="{{ url_for('auth.profile') }}">마이페이지</a>
+                <span>{{ current_user.display_name }}님</span>
+                <a href="{{ url_for('products.create') }}">상품 등록</a>
+                <a href="{{ url_for('products.mine') }}">내 상품</a>
+                <a href="{{ url_for('auth.profile') }}">마이페이지</a>
 
-                    <form
-                        class="inline-form"
-                        method="post"
-                        action="{{ url_for('auth.logout') }}"
-                    >
-                        <input
-                            type="hidden"
-                            name="csrf_token"
-                            value="{{ csrf_token() }}"
-                        >
-                        <button class="link-button" type="submit">
-                            로그아웃
-                        </button>
+                <form class="inline-form" method="post" action="{{ url_for('auth.logout') }}">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <button class="link-button" type="submit">
+                        로그아웃
+                    </button>
                 </form>
-            {% else %}
+                {% else %}
                 <a href="{{ url_for('auth.login') }}">로그인</a>
                 <a href="{{ url_for('auth.register') }}">회원가입</a>
-            {% endif %}
+                {% endif %}
             </div>
         </nav>
     </header>
 
     <main class="container">
-    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
-            <div class="flash-list" aria-live="polite">
-                {% for category, message in messages %}
-                    <div class="flash flash-{{ category }}">
-                        {{ message }}
-                    </div>
-                {% endfor %}
+        <div class="flash-list" aria-live="polite">
+            {% for category, message in messages %}
+            <div class="flash flash-{{ category }}">
+                {{ message }}
             </div>
+            {% endfor %}
+        </div>
         {% endif %}
-    {% endwith %}
+        {% endwith %}
 
-    {% block content %}{% endblock %}
+        {% block content %}{% endblock %}
     </main>
 </body>
+
 </html>
