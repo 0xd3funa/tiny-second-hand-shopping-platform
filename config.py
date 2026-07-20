@@ -17,6 +17,8 @@ class Config:
     )
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
+    UPLOAD_FOLDER = BASE_DIR / "uploads"
+
     # 요청 전체 크기를 5MB로 제한한다.
     MAX_CONTENT_LENGTH = 5 * 1024 * 1024
 

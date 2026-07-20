@@ -36,6 +36,10 @@ def create_app(test_config=None):
     # SQLite 데이터베이스가 저장될 폴더를 생성한다.
     Path(app.instance_path).mkdir(parents=True, exist_ok=True)
 
+    Path(app.config["UPLOAD_FOLDER"]).mkdir(
+    parents=True,
+    exist_ok=True,
+)
     # Flask 확장 기능을 현재 앱에 연결한다.
     db.init_app(app)
     login_manager.init_app(app)
@@ -50,9 +54,11 @@ def create_app(test_config=None):
     # 메인 페이지 Blueprint를 등록한다.
     from app.auth import auth_bp
     from app.main import main_bp
+    from app.products import products_bp
 
     app.register_blueprint(main_bp)
     app.register_blueprint(auth_bp)
+    app.register_blueprint(products_bp)
 
     @app.after_request
     def add_security_headers(response):

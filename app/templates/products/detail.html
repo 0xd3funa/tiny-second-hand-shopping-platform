@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block title %}{{ product.name }} | Tiny Market{% endblock %}
+
+{% block content %}
+<article class="product-detail">
+    <div class="product-image-wrap">
+        <img
+            class="product-image"
+            src="{{ url_for(
+                'products.image',
+                filename=product.image_filename
+            ) }}"
+            alt="{{ product.name }}"
+        >
+    </div>
+
+    <div class="product-information">
+        <p class="eyebrow">
+            {% if product.status == "available" %}
+                판매 중
+            {% elif product.status == "reserved" %}
+                예약 중
+            {% elif product.status == "sold" %}
+                판매 완료
+            {% else %}
+                차단됨
+            {% endif %}
+        </p>
+
+        <h1>{{ product.name }}</h1>
+        <p class="product-price">
+            {{ "{:,}".format(product.price) }}원
+        </p>
+
+        <dl class="product-meta">
+            <div>
+                <dt>판매자</dt>
+                <dd>{{ product.seller.display_name }}</dd>
+            </div>
+
+            <div>
+                <dt>등록일</dt>
+                <dd>{{ product.created_at.strftime("%Y-%m-%d") }}</dd>
+            </div>
+        </dl>
+
+        <section class="product-description">
+            <h2>상품 설명</h2>
+            <p>{{ product.description }}</p>
+        </section>
+    </div>
+</article>
+{% endblock %}

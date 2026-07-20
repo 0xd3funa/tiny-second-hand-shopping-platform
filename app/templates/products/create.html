@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block title %}상품 등록 | Tiny Market{% endblock %}
+
+{% block content %}
+<section class="form-card product-form-card">
+    <p class="eyebrow">SELL AN ITEM</p>
+    <h1>상품 등록</h1>
+    <p class="form-description">
+        상품 정보를 정확하게 입력해 주세요.
+    </p>
+
+    <form
+        method="post"
+        enctype="multipart/form-data"
+        novalidate
+    >
+        {{ form.hidden_tag() }}
+
+        <div class="form-group">
+            {{ form.name.label }}
+            {{ form.name(
+                placeholder="상품명",
+                autocomplete="off"
+            ) }}
+
+            {% for error in form.name.errors %}
+                <p class="field-error">{{ error }}</p>
+            {% endfor %}
+        </div>
+
+        <div class="form-group">
+            {{ form.description.label }}
+            {{ form.description(
+                rows="8",
+                placeholder="상품 상태와 거래 방법을 설명해 주세요."
+            ) }}
+
+            {% for error in form.description.errors %}
+                <p class="field-error">{{ error }}</p>
+            {% endfor %}
+        </div>
+
+        <div class="form-group">
+            {{ form.price.label }}
+            {{ form.price(
+                min="0",
+                max="100000000",
+                inputmode="numeric",
+                placeholder="가격"
+            ) }}
+
+            {% for error in form.price.errors %}
+                <p class="field-error">{{ error }}</p>
+            {% endfor %}
+        </div>
+
+        <div class="form-group">
+            {{ form.image.label }}
+            {{ form.image(
+                accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"
+            ) }}
+            <p class="field-help">
+                JPG, PNG, WebP 형식, 최대 요청 크기 5MB
+            </p>
+
+            {% for error in form.image.errors %}
+                <p class="field-error">{{ error }}</p>
+            {% endfor %}
+        </div>
+
+        {{ form.submit(class="button") }}
+    </form>
+</section>
+{% endblock %}
