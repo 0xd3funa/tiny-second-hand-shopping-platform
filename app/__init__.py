@@ -71,6 +71,7 @@ def create_app(test_config=None):
 
     # 각 기능의 Blueprint를 등록한다.
     from app.auth import auth_bp
+    from app.chat import chat_bp
     from app.main import main_bp
     from app.products import products_bp
     from app.reports import reports_bp
@@ -81,7 +82,8 @@ def create_app(test_config=None):
     app.register_blueprint(products_bp)
     app.register_blueprint(reports_bp)
     app.register_blueprint(transfers_bp)
-
+    app.register_blueprint(chat_bp)
+    
     @app.before_request
     def enforce_active_account():
         """휴면 계정의 기존 로그인 세션도 강제로 종료한다."""

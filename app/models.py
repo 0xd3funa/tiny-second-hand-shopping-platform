@@ -114,7 +114,20 @@ class User(UserMixin, db.Model):
         back_populates="recipient",
         lazy="select",
     )
+    chat_messages_sent = db.relationship(
+        "ChatMessage",
+        foreign_keys="ChatMessage.sender_id",
+        back_populates="sender",
+        cascade="all, delete-orphan",
+        lazy="select",
+    )
 
+    chat_messages_received = db.relationship(
+        "ChatMessage",
+        foreign_keys="ChatMessage.recipient_id",
+        back_populates="recipient",
+        lazy="select",
+    )
 
     def set_password(self, password):
         """비밀번호 원문 대신 scrypt 해시를 저장한다."""
@@ -418,3 +431,87 @@ class Transfer(db.Model):
             f"recipient_id={self.recipient_id} "
             f"amount={self.amount}>"
         )    
+class ChatMessage(db.Model):
+    __tablename__ = "chat_messages"
+
+    __table_args__ = (
+        db.CheckConstraint(
+            "scope IN ('public', 'direct')",
+            name="ck_chat_messages_scope",
+        ),
+        db.CheckConstraint(
+            "("
+            "scope = 'public' AND recipient_id IS NULL"
+            ") OR ("
+            "scope = 'direct' "
+            "AND recipient_id IS NOT NULL "
+            "AND sender_id != recipient_id"
+            ")",
+            name="ck_chat_messages_target",
+        ),
+        db.CheckConstraint(
+            "length(content) BETWEEN 1 AND 500",
+            name="ck_chat_messages_content_length",
+        ),
+    )
+
+    id = db.Column(
+        db.Integer,
+        primary_key=True,
+    )
+
+    sender_id = db.Column(
+        db.Integer,
+        db.ForeignKey(
+            "users.id",
+            ondelete="CASCADE",
+        ),
+        nullable=False,
+        index=True,
+    )
+
+    recipient_id = db.Column(
+        db.Integer,
+        db.ForeignKey(
+            "users.id",
+            ondelete="CASCADE",
+        ),
+        nullable=True,
+        index=True,
+    )
+
+    scope = db.Column(
+        db.String(10),
+        nullable=False,
+    )
+
+    content = db.Column(
+        db.String(500),
+        nullable=False,
+    )
+
+    created_at = db.Column(
+        db.DateTime(timezone=True),
+        nullable=False,
+        default=lambda: datetime.now(timezone.utc),
+        index=True,
+    )
+
+    sender = db.relationship(
+        "User",
+        foreign_keys=[sender_id],
+        back_populates="chat_messages_sent",
+    )
+
+    recipient = db.relationship(
+        "User",
+        foreign_keys=[recipient_id],
+        back_populates="chat_messages_received",
+    )
+
+    def __repr__(self):
+        return (
+            f"<ChatMessage id={self.id} "
+            f"scope={self.scope!r} "
+            f"sender_id={self.sender_id}>"
+        )

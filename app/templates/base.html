@@ -3,57 +3,112 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{% block title %}Tiny Market{% endblock %}</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1"
+    >
+
+    <title>
+        {% block title %}Tiny Market{% endblock %}
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for(
+            'static',
+            filename='css/style.css'
+        ) }}"
+    >
 </head>
 
 <body>
     <header class="site-header">
         <nav class="container navigation">
-            <a class="brand" href="{{ url_for('main.index') }}">
+            <a
+                class="brand"
+                href="{{ url_for('main.index') }}"
+            >
                 <span>Tiny Market</span>
                 <small>다시장</small>
             </a>
 
             <div class="nav-links">
                 {% if current_user.is_authenticated %}
-                <span>{{ current_user.display_name }}님</span>
-                <a href="{{ url_for('products.create') }}">상품 등록</a>
-                <a href="{{ url_for('products.mine') }}">내 상품</a>
-                <a href="{{ url_for('auth.profile') }}">마이페이지</a>
-                <a href="{{ url_for('transfers.create') }}">
-                    잔액 보내기
-                </a>
+                    <span>
+                        {{ current_user.display_name }}님
+                    </span>
 
-                <a href="{{ url_for('transfers.history') }}">
-                    주고받은 기록
-                </a>
-                <form class="inline-form" method="post" action="{{ url_for('auth.logout') }}">
-                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                    <button class="link-button" type="submit">
-                        로그아웃
-                    </button>
-                </form>
+                    <a href="{{ url_for('products.create') }}">
+                        상품 등록
+                    </a>
+
+                    <a href="{{ url_for('products.mine') }}">
+                        내 상품
+                    </a>
+
+                    <a href="{{ url_for('chat.public') }}">
+                        모두의 채팅
+                    </a>
+
+                    <a href="{{ url_for('transfers.create') }}">
+                        송금하기 
+                    </a>
+
+                    <a href="{{ url_for('transfers.history') }}">
+                        송금내역 
+                    </a>
+
+                    <a href="{{ url_for('auth.profile') }}">
+                        마이페이지
+                    </a>
+
+                    <form
+                        class="inline-form"
+                        method="post"
+                        action="{{ url_for('auth.logout') }}"
+                    >
+                        <input
+                            type="hidden"
+                            name="csrf_token"
+                            value="{{ csrf_token() }}"
+                        >
+
+                        <button
+                            class="link-button"
+                            type="submit"
+                        >
+                            로그아웃
+                        </button>
+                    </form>
                 {% else %}
-                <a href="{{ url_for('auth.login') }}">로그인</a>
-                <a href="{{ url_for('auth.register') }}">회원가입</a>
+                    <a href="{{ url_for('auth.login') }}">
+                        로그인
+                    </a>
+
+                    <a href="{{ url_for('auth.register') }}">
+                        회원가입
+                    </a>
                 {% endif %}
             </div>
         </nav>
     </header>
 
     <main class="container">
-        {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-        <div class="flash-list" aria-live="polite">
-            {% for category, message in messages %}
-            <div class="flash flash-{{ category }}">
-                {{ message }}
-            </div>
-            {% endfor %}
-        </div>
-        {% endif %}
+        {% with messages =
+            get_flashed_messages(with_categories=true)
+        %}
+            {% if messages %}
+                <div
+                    class="flash-list"
+                    aria-live="polite"
+                >
+                    {% for category, message in messages %}
+                        <div class="flash flash-{{ category }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
         {% endwith %}
 
         {% block content %}{% endblock %}

@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+
+{% block title %}모두의 교환일지 | Tiny Market{% endblock %}
+
+{% block content %}
+<section class="chat-page">
+    <header class="chat-heading">
+        <p class="eyebrow">모두의 교환일지 · PUBLIC CHAT</p>
+        <h1>전체 채팅</h1>
+        <p>
+            다시장을 이용하는 사람들이 함께 기록하는
+            공개 대화 공간입니다.
+        </p>
+    </header>
+
+    <div class="chat-book">
+        <div class="chat-book-label">
+            최근 메시지 {{ messages | length }}개
+        </div>
+
+        <ol class="message-list">
+            {% for message in messages %}
+                <li
+                    class="message-entry
+                    {% if message.sender_id == current_user.id %}
+                        message-entry-mine
+                    {% endif %}"
+                >
+                    <div class="message-author">
+                        <strong>
+                            {{ message.sender.display_name }}
+                        </strong>
+
+                        <time
+                            datetime="{{ message.created_at.isoformat() }}"
+                        >
+                            {{ message.created_at | kst_datetime }}
+                        </time>
+                    </div>
+
+                    <p>{{ message.content }}</p>
+
+                    {% if message.sender_id != current_user.id %}
+                        <a
+                            class="message-direct-link"
+                            href="{{ url_for(
+                                'chat.direct',
+                                user_id=message.sender_id
+                            ) }}"
+                        >
+                            1:1 대화하기
+                        </a>
+                    {% endif %}
+                </li>
+            {% else %}
+                <li class="chat-empty">
+                    아직 기록된 이야기가 없습니다.
+                    첫 메시지를 남겨 보세요.
+                </li>
+            {% endfor %}
+        </ol>
+
+        <form class="message-form" method="post" novalidate>
+            {{ form.hidden_tag() }}
+
+            <div class="form-field">
+                {{ form.content.label }}
+
+                {{ form.content(
+                    rows="3",
+                    maxlength="500",
+                    placeholder="서로를 배려하는 메시지를 남겨 주세요."
+                ) }}
+
+                {% for error in form.content.errors %}
+                    <p class="field-error">{{ error }}</p>
+                {% endfor %}
+            </div>
+
+            {{ form.submit(class="primary-button") }}
+        </form>
+    </div>
+</section>
+{% endblock %}
