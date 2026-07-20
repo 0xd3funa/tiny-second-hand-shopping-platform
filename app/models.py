@@ -29,7 +29,6 @@ class User(UserMixin, db.Model):
         primary_key=True,
     )
 
-    # NOCASE를 적용하여 Euna와 euna를 같은 아이디로 취급한다.
     username = db.Column(
         db.String(24, collation="NOCASE"),
         unique=True,
@@ -84,6 +83,24 @@ class User(UserMixin, db.Model):
         lazy="select",
     )
 
+    # 이 사용자가 작성한 신고 목록
+    reports_made = db.relationship(
+        "Report",
+        foreign_keys="Report.reporter_id",
+        back_populates="reporter",
+        cascade="all, delete-orphan",
+        lazy="select",
+    )
+
+    # 이 사용자를 대상으로 작성된 신고 목록
+    reports_received = db.relationship(
+        "Report",
+        foreign_keys="Report.target_user_id",
+        back_populates="target_user",
+        cascade="all, delete-orphan",
+        lazy="select",
+    )
+
     def set_password(self, password):
         """비밀번호 원문 대신 scrypt 해시를 저장한다."""
         if not isinstance(password, str):
@@ -111,7 +128,6 @@ class User(UserMixin, db.Model):
 
     @property
     def is_active(self):
-        """휴면 사용자는 활성 사용자로 처리하지 않는다."""
         return self.status == "active"
 
     @property
@@ -189,5 +205,125 @@ class Product(db.Model):
         back_populates="products",
     )
 
+    # 이 상품을 대상으로 작성된 신고 목록
+    reports_received = db.relationship(
+        "Report",
+        foreign_keys="Report.target_product_id",
+        back_populates="target_product",
+        cascade="all, delete-orphan",
+        lazy="select",
+    )
+
     def __repr__(self):
         return f"<Product id={self.id} name={self.name!r}>"
+
+
+class Report(db.Model):
+    __tablename__ = "reports"
+
+    __table_args__ = (
+        # 사용자 또는 상품 중 정확히 하나만 신고 대상으로 지정한다.
+        db.CheckConstraint(
+            """
+            (
+                target_user_id IS NOT NULL
+                AND target_product_id IS NULL
+            )
+            OR
+            (
+                target_user_id IS NULL
+                AND target_product_id IS NOT NULL
+            )
+            """,
+            name="ck_reports_exactly_one_target",
+        ),
+        # 같은 사용자가 같은 사용자를 중복 신고하지 못하게 한다.
+        db.UniqueConstraint(
+            "reporter_id",
+            "target_user_id",
+            name="uq_reports_reporter_user",
+        ),
+        # 같은 사용자가 같은 상품을 중복 신고하지 못하게 한다.
+        db.UniqueConstraint(
+            "reporter_id",
+            "target_product_id",
+            name="uq_reports_reporter_product",
+        ),
+    )
+
+    id = db.Column(
+        db.Integer,
+        primary_key=True,
+    )
+
+    reporter_id = db.Column(
+        db.Integer,
+        db.ForeignKey(
+            "users.id",
+            ondelete="CASCADE",
+        ),
+        nullable=False,
+        index=True,
+    )
+
+    target_user_id = db.Column(
+        db.Integer,
+        db.ForeignKey(
+            "users.id",
+            ondelete="CASCADE",
+        ),
+        nullable=True,
+        index=True,
+    )
+
+    target_product_id = db.Column(
+        db.Integer,
+        db.ForeignKey(
+            "products.id",
+            ondelete="CASCADE",
+        ),
+        nullable=True,
+        index=True,
+    )
+
+    reason = db.Column(
+        db.String(500),
+        nullable=False,
+    )
+
+    created_at = db.Column(
+        db.DateTime(timezone=True),
+        nullable=False,
+        default=lambda: datetime.now(timezone.utc),
+    )
+
+    reporter = db.relationship(
+        "User",
+        foreign_keys=[reporter_id],
+        back_populates="reports_made",
+    )
+
+    target_user = db.relationship(
+        "User",
+        foreign_keys=[target_user_id],
+        back_populates="reports_received",
+    )
+
+    target_product = db.relationship(
+        "Product",
+        foreign_keys=[target_product_id],
+        back_populates="reports_received",
+    )
+
+    @property
+    def target_type(self):
+        if self.target_user_id is not None:
+            return "user"
+
+        return "product"
+
+    def __repr__(self):
+        return (
+            f"<Report id={self.id} "
+            f"target_type={self.target_type!r}>"
+        )

@@ -28,6 +28,8 @@ class Config:
     # 외부 사이트에서 시작된 요청의 쿠키 전송을 제한한다.
     SESSION_COOKIE_SAMESITE = "Lax"
 
+    REPORT_THRESHOLD = 3
+    
     # HTTPS 배포환경에서는 반드시 true로 변경한다.
     SESSION_COOKIE_SECURE = (
         os.environ.get("COOKIE_SECURE", "false").lower() == "true"
