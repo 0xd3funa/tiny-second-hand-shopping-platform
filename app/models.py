@@ -101,6 +101,21 @@ class User(UserMixin, db.Model):
         lazy="select",
     )
 
+    transfers_sent = db.relationship(
+        "Transfer",
+        foreign_keys="Transfer.sender_id",
+        back_populates="sender",
+        lazy="select",
+    )
+
+    transfers_received = db.relationship(
+        "Transfer",
+        foreign_keys="Transfer.recipient_id",
+        back_populates="recipient",
+        lazy="select",
+    )
+
+
     def set_password(self, password):
         """비밀번호 원문 대신 scrypt 해시를 저장한다."""
         if not isinstance(password, str):
@@ -327,3 +342,79 @@ class Report(db.Model):
             f"<Report id={self.id} "
             f"target_type={self.target_type!r}>"
         )
+    
+class Transfer(db.Model):
+    __tablename__ = "transfers"
+
+    __table_args__ = (
+        db.CheckConstraint(
+            "amount BETWEEN 1 AND 1000000",
+            name="ck_transfers_amount_range",
+        ),
+        db.CheckConstraint(
+            "sender_id != recipient_id",
+            name="ck_transfers_different_users",
+        ),
+    )
+
+    id = db.Column(
+        db.Integer,
+        primary_key=True,
+    )
+
+    sender_id = db.Column(
+        db.Integer,
+        db.ForeignKey(
+            "users.id",
+            ondelete="RESTRICT",
+        ),
+        nullable=False,
+        index=True,
+    )
+
+    recipient_id = db.Column(
+        db.Integer,
+        db.ForeignKey(
+            "users.id",
+            ondelete="RESTRICT",
+        ),
+        nullable=False,
+        index=True,
+    )
+
+    amount = db.Column(
+        db.Integer,
+        nullable=False,
+    )
+
+    memo = db.Column(
+        db.String(100),
+        nullable=False,
+        default="",
+    )
+
+    created_at = db.Column(
+        db.DateTime(timezone=True),
+        nullable=False,
+        default=lambda: datetime.now(timezone.utc),
+    )
+
+    sender = db.relationship(
+        "User",
+        foreign_keys=[sender_id],
+        back_populates="transfers_sent",
+    )
+
+    recipient = db.relationship(
+        "User",
+        foreign_keys=[recipient_id],
+        back_populates="transfers_received",
+    )
+
+    def __repr__(self):
+        return (
+            f"<Transfer id={self.id} "
+            f"sender_id={self.sender_id} "
+            f"recipient_id={self.recipient_id} "
+            f"amount={self.amount}>"
+        )    
