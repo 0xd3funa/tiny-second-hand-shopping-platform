@@ -6,10 +6,9 @@
 <section class="transfer-page">
     <header class="transfer-heading">
         <p class="eyebrow">VALUE TRANSFER · 다시장</p>
-        <h1>마음을 담아 보내기</h1>
+        <h1>송금 내역</h1>
         <p>
-            다시 만난 물건처럼, 가상 잔액도 안전하게
-            다음 사람에게 전달합니다.
+            내가 보낸 금액과 받은 금액을 시간순으로 확인합니다.
         </p>
     </header>
 
@@ -90,10 +89,10 @@
                 {{ form.submit(class="primary-button") }}
 
                 <a
-                    class="secondary-button"
-                    href="{{ url_for('transfers.history') }}"
+                    class="primary-button"
+                    href="{{ url_for('transfers.create') }}"
                 >
-                    주고받은 기록
+                    송금하기
                 </a>
             </div>
         </form>
