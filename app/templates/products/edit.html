@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+{% block title %}상품 수정 | Tiny Market{% endblock %}
+
+{% block content %}
+<section class="form-card product-form-card">
+    <p class="eyebrow">EDIT PRODUCT</p>
+    <h1>상품 수정</h1>
+    <p class="form-description">
+        상품 정보와 판매 상태를 변경할 수 있습니다.
+    </p>
+
+    <form
+        method="post"
+        enctype="multipart/form-data"
+        novalidate
+    >
+        {{ form.hidden_tag() }}
+
+        <div class="form-group">
+            {{ form.name.label }}
+            {{ form.name() }}
+
+            {% for error in form.name.errors %}
+                <p class="field-error">{{ error }}</p>
+            {% endfor %}
+        </div>
+
+        <div class="form-group">
+            {{ form.description.label }}
+            {{ form.description(rows="8") }}
+
+            {% for error in form.description.errors %}
+                <p class="field-error">{{ error }}</p>
+            {% endfor %}
+        </div>
+
+        <div class="form-group">
+            {{ form.price.label }}
+            {{ form.price(
+                min="0",
+                max="100000000",
+                inputmode="numeric"
+            ) }}
+
+            {% for error in form.price.errors %}
+                <p class="field-error">{{ error }}</p>
+            {% endfor %}
+        </div>
+
+        <div class="form-group">
+            {{ form.status.label }}
+            {{ form.status() }}
+
+            {% for error in form.status.errors %}
+                <p class="field-error">{{ error }}</p>
+            {% endfor %}
+        </div>
+
+        <div class="current-image">
+            <p>현재 사진</p>
+            <img
+                src="{{ url_for(
+                    'products.image',
+                    filename=product.image_filename
+                ) }}"
+                alt="{{ product.name }}"
+            >
+        </div>
+
+        <div class="form-group">
+            {{ form.image.label }}
+            {{ form.image(
+                accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"
+            ) }}
+            <p class="field-help">
+                사진을 유지하려면 파일을 선택하지 마세요.
+            </p>
+
+            {% for error in form.image.errors %}
+                <p class="field-error">{{ error }}</p>
+            {% endfor %}
+        </div>
+
+        {{ form.submit(class="button") }}
+    </form>
+</section>
+{% endblock %}

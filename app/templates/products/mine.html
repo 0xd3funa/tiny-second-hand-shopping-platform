@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block title %}내 상품 | Tiny Market{% endblock %}
+
+{% block content %}
+<section class="product-section">
+    <div class="section-heading">
+        <div>
+            <p class="eyebrow">MY PRODUCTS</p>
+            <h1>내가 등록한 상품</h1>
+        </div>
+
+        <a
+            class="button button-auto"
+            href="{{ url_for('products.create') }}"
+        >
+            새 상품 등록
+        </a>
+    </div>
+
+    {% if products %}
+        <div class="product-grid">
+            {% for product in products %}
+                {% include "products/_card.html" %}
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="empty-state">
+            <h2>등록한 상품이 없습니다.</h2>
+            <p>사용하지 않는 물건을 판매해 보세요.</p>
+        </div>
+    {% endif %}
+</section>
+{% endblock %}

@@ -23,6 +23,7 @@
                 {% if current_user.is_authenticated %}
                     <span>{{ current_user.display_name }}님</span>
                     <a href="{{ url_for('products.create') }}">상품 등록</a>
+                    <a href="{{ url_for('products.mine') }}">내 상품</a>
                     <a href="{{ url_for('auth.profile') }}">마이페이지</a>
 
                     <form

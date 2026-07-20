@@ -1,0 +1,45 @@
+<article class="product-card">
+    <a
+        class="product-card-link"
+        href="{{ url_for(
+            'products.detail',
+            product_id=product.id
+        ) }}"
+    >
+        <div class="product-card-image-wrap">
+            <img
+                class="product-card-image"
+                src="{{ url_for(
+                    'products.image',
+                    filename=product.image_filename
+                ) }}"
+                alt="{{ product.name }}"
+                loading="lazy"
+            >
+        </div>
+
+        <div class="product-card-content">
+            <p class="product-status">
+                {% if product.status == "available" %}
+                    판매 중
+                {% elif product.status == "reserved" %}
+                    예약 중
+                {% elif product.status == "sold" %}
+                    판매 완료
+                {% else %}
+                    차단됨
+                {% endif %}
+            </p>
+
+            <h3>{{ product.name }}</h3>
+
+            <p class="product-card-price">
+                {{ "{:,}".format(product.price) }}원
+            </p>
+
+            <p class="product-card-seller">
+                {{ product.seller.display_name }}
+            </p>
+        </div>
+    </a>
+</article>
