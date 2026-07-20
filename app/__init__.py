@@ -39,6 +39,9 @@ def create_app(test_config=None):
     # Flask 확장 기능을 현재 앱에 연결한다.
     db.init_app(app)
     login_manager.init_app(app)
+    login_manager.login_view = "auth.login"
+    login_manager.login_message = "로그인이 필요한 기능입니다."
+    login_manager.login_message_category = "error"
     migrate.init_app(app, db)
     csrf.init_app(app)
     limiter.init_app(app)

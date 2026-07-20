@@ -92,3 +92,34 @@ class RegistrationForm(FlaskForm):
             raise ValidationError(
                 "비밀번호에는 숫자가 하나 이상 필요합니다."
             )
+
+
+class LoginForm(FlaskForm):
+    username = StringField(
+        "아이디",
+        validators=[
+            DataRequired(message="아이디를 입력해 주세요."),
+            Length(
+                min=3,
+                max=24,
+                message="올바른 아이디를 입력해 주세요.",
+            ),
+        ],
+    )
+
+    password = PasswordField(
+        "비밀번호",
+        validators=[
+            DataRequired(message="비밀번호를 입력해 주세요."),
+            Length(
+                max=128,
+                message="올바른 비밀번호를 입력해 주세요.",
+            ),
+        ],
+    )
+
+    submit = SubmitField("로그인")
+
+
+class LogoutForm(FlaskForm):
+    submit = SubmitField("로그아웃")

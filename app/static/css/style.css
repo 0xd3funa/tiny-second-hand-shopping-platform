@@ -169,3 +169,37 @@ body {
     background: #fff0ef;
     color: #8f2119;
 }
+.nav-links {
+    align-items: center;
+}
+
+.inline-form {
+    display: inline;
+    margin: 0;
+}
+
+.link-button {
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--text);
+    font: inherit;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.link-button:hover,
+.nav-links a:hover {
+    color: var(--primary);
+}
+
+.form-footer {
+    margin-top: 24px;
+    color: var(--muted);
+    text-align: center;
+}
+
+.form-footer a {
+    color: var(--primary);
+    font-weight: 700;
+}

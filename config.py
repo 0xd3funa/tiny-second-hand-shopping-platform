@@ -1,4 +1,5 @@
 import os
+from datetime import timedelta
 from pathlib import Path
 
 from dotenv import load_dotenv
@@ -29,3 +30,4 @@ class Config:
     SESSION_COOKIE_SECURE = (
         os.environ.get("COOKIE_SECURE", "false").lower() == "true"
     )
+    PERMANENT_SESSION_LIFETIME = timedelta(hours=2)
