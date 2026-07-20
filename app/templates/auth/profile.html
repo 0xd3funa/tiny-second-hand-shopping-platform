@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block title %}마이페이지 | Tiny Market{% endblock %}
+
+{% block content %}
+<section class="profile-layout">
+    <aside class="profile-summary">
+        <p class="eyebrow">MY ACCOUNT</p>
+        <h1>{{ current_user.display_name }}</h1>
+
+        <dl class="profile-details">
+            <div>
+                <dt>아이디</dt>
+                <dd>{{ current_user.username }}</dd>
+            </div>
+
+            <div>
+                <dt>가상 잔액</dt>
+                <dd>{{ "{:,}".format(current_user.balance) }}원</dd>
+            </div>
+
+            <div>
+                <dt>계정 상태</dt>
+                <dd>
+                    {% if current_user.status == "active" %}
+                        정상
+                    {% else %}
+                        휴면
+                    {% endif %}
+                </dd>
+            </div>
+        </dl>
+
+        <a
+            class="secondary-button"
+            href="{{ url_for('auth.change_password') }}"
+        >
+            비밀번호 변경
+        </a>
+    </aside>
+
+    <section class="form-card profile-form-card">
+        <h2>프로필 수정</h2>
+
+        <form method="post" novalidate>
+            {{ form.hidden_tag() }}
+
+            <div class="form-group">
+                {{ form.display_name.label }}
+                {{ form.display_name(autocomplete="name") }}
+
+                {% for error in form.display_name.errors %}
+                    <p class="field-error">{{ error }}</p>
+                {% endfor %}
+            </div>
+
+            <div class="form-group">
+                {{ form.bio.label }}
+                {{ form.bio(
+                    rows="6",
+                    placeholder="자신을 소개해 주세요."
+                ) }}
+
+                {% for error in form.bio.errors %}
+                    <p class="field-error">{{ error }}</p>
+                {% endfor %}
+            </div>
+
+            {{ form.submit(class="button") }}
+        </form>
+    </section>
+</section>
+{% endblock %}

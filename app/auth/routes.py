@@ -17,7 +17,13 @@ from flask_login import (
 from sqlalchemy.exc import IntegrityError
 
 from app.auth import auth_bp
-from app.auth.forms import LoginForm, LogoutForm, RegistrationForm
+from app.auth.forms import (
+    ChangePasswordForm,
+    LoginForm,
+    LogoutForm,
+    ProfileForm,
+    RegistrationForm,
+)
 from app.extensions import db, limiter
 from app.models import User
 
@@ -39,7 +45,7 @@ def is_safe_redirect_target(target):
 
 
 @auth_bp.route("/register", methods=["GET", "POST"])
-@limiter.limit("5 per minute")
+@limiter.limit("5 per minute", methods=["POST"])
 def register():
     if current_user.is_authenticated:
         return redirect(url_for("main.index"))
@@ -80,7 +86,7 @@ def register():
 
 
 @auth_bp.route("/login", methods=["GET", "POST"])
-@limiter.limit("5 per minute")
+@limiter.limit("5 per minute", methods=["POST"])
 def login():
     if current_user.is_authenticated:
         return redirect(url_for("main.index"))
@@ -156,3 +162,72 @@ def logout():
         "success",
     )
     return redirect(url_for("main.index"))
+@auth_bp.route("/profile", methods=["GET", "POST"])
+@login_required
+def profile():
+    form = ProfileForm(obj=current_user)
+
+    if form.validate_on_submit():
+        current_user.display_name = form.display_name.data.strip()
+        current_user.bio = (form.bio.data or "").strip()
+
+        db.session.commit()
+
+        flash(
+            "프로필이 수정되었습니다.",
+            "success",
+        )
+        return redirect(url_for("auth.profile"))
+
+    return render_template(
+        "auth/profile.html",
+        form=form,
+    )
+
+
+@auth_bp.route("/password", methods=["GET", "POST"])
+@login_required
+@limiter.limit("5 per hour", methods=["POST"])
+def change_password():
+    form = ChangePasswordForm()
+
+    if form.validate_on_submit():
+        if not current_user.check_password(
+            form.current_password.data
+        ):
+            flash(
+                "현재 비밀번호가 올바르지 않습니다.",
+                "error",
+            )
+            return render_template(
+                "auth/change_password.html",
+                form=form,
+            )
+
+        if current_user.check_password(form.new_password.data):
+            flash(
+                "새 비밀번호는 현재 비밀번호와 달라야 합니다.",
+                "error",
+            )
+            return render_template(
+                "auth/change_password.html",
+                form=form,
+            )
+
+        current_user.set_password(form.new_password.data)
+        db.session.commit()
+
+        # 비밀번호 변경 후 기존 로그인 상태를 종료하고 재인증한다.
+        logout_user()
+        session.clear()
+
+        flash(
+            "비밀번호가 변경되었습니다. 새 비밀번호로 로그인해 주세요.",
+            "success",
+        )
+        return redirect(url_for("auth.login"))
+
+    return render_template(
+        "auth/change_password.html",
+        form=form,
+    )

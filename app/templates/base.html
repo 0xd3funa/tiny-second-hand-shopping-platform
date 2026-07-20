@@ -22,7 +22,8 @@
             <div class="nav-links">
                 {% if current_user.is_authenticated %}
                     <span>{{ current_user.display_name }}님</span>
-
+                    <a href="{{ url_for('auth.profile') }}">마이페이지</a>
+                    
                     <form
                         class="inline-form"
                         method="post"

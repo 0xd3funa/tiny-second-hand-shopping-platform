@@ -1,7 +1,12 @@
 import re
 
 from flask_wtf import FlaskForm
-from wtforms import PasswordField, StringField, SubmitField
+from wtforms import (
+    PasswordField,
+    StringField,
+    SubmitField,
+    TextAreaField,
+)
 from wtforms.validators import (
     DataRequired,
     EqualTo,
@@ -123,3 +128,76 @@ class LoginForm(FlaskForm):
 
 class LogoutForm(FlaskForm):
     submit = SubmitField("로그아웃")
+
+class ProfileForm(FlaskForm):
+    display_name = StringField(
+        "표시 이름",
+        validators=[
+            DataRequired(message="표시 이름을 입력해 주세요."),
+            Length(
+                min=2,
+                max=40,
+                message="표시 이름은 2자 이상 40자 이하여야 합니다.",
+            ),
+        ],
+    )
+
+    bio = TextAreaField(
+        "소개글",
+        validators=[
+            Length(
+                max=300,
+                message="소개글은 300자 이하여야 합니다.",
+            ),
+        ],
+    )
+
+    submit = SubmitField("프로필 저장")
+
+
+class ChangePasswordForm(FlaskForm):
+    current_password = PasswordField(
+        "현재 비밀번호",
+        validators=[
+            DataRequired(message="현재 비밀번호를 입력해 주세요."),
+            Length(max=128),
+        ],
+    )
+
+    new_password = PasswordField(
+        "새 비밀번호",
+        validators=[
+            DataRequired(message="새 비밀번호를 입력해 주세요."),
+            Length(
+                min=10,
+                max=128,
+                message="비밀번호는 10자 이상 128자 이하여야 합니다.",
+            ),
+        ],
+    )
+
+    new_password_confirm = PasswordField(
+        "새 비밀번호 확인",
+        validators=[
+            DataRequired(message="새 비밀번호를 다시 입력해 주세요."),
+            EqualTo(
+                "new_password",
+                message="새 비밀번호가 일치하지 않습니다.",
+            ),
+        ],
+    )
+
+    submit = SubmitField("비밀번호 변경")
+
+    def validate_new_password(self, field):
+        password = field.data
+
+        if not re.search(r"[A-Za-z]", password):
+            raise ValidationError(
+                "비밀번호에는 영문자가 하나 이상 필요합니다."
+            )
+
+        if not re.search(r"\d", password):
+            raise ValidationError(
+                "비밀번호에는 숫자가 하나 이상 필요합니다."
+            )
