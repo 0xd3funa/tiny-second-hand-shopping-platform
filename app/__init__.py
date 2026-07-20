@@ -10,7 +10,17 @@ from app.extensions import (
     migrate,
     socketio,
 )
+from app.models import User
 from config import Config
+
+
+@login_manager.user_loader
+def load_user(user_id):
+    """세션에 저장된 사용자 ID로 사용자를 조회한다."""
+    try:
+        return db.session.get(User, int(user_id))
+    except (TypeError, ValueError):
+        return None
 
 
 def create_app(test_config=None):
@@ -29,10 +39,6 @@ def create_app(test_config=None):
     # Flask 확장 기능을 현재 앱에 연결한다.
     db.init_app(app)
     login_manager.init_app(app)
-    @login_manager.user_loader
-    def load_user(user_id):
-    # 사용자 모델 구현 전까지는 로그인 사용자가 없다고 처리한다.
-        return None
     migrate.init_app(app, db)
     csrf.init_app(app)
     limiter.init_app(app)
