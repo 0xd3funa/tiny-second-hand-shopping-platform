@@ -22,7 +22,13 @@
                 <a href="{{ url_for('products.create') }}">상품 등록</a>
                 <a href="{{ url_for('products.mine') }}">내 상품</a>
                 <a href="{{ url_for('auth.profile') }}">마이페이지</a>
+                <a href="{{ url_for('transfers.create') }}">
+                    잔액 보내기
+                </a>
 
+                <a href="{{ url_for('transfers.history') }}">
+                    주고받은 기록
+                </a>
                 <form class="inline-form" method="post" action="{{ url_for('auth.logout') }}">
                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                     <button class="link-button" type="submit">

@@ -726,3 +726,272 @@ body {
         padding: 30px 24px;
     }
 }
+/* Transfer pocket archive */
+.transfer-page,
+.transfer-history-page {
+    width: min(1080px, calc(100% - 32px));
+    margin: 56px auto 96px;
+}
+
+.transfer-heading,
+.history-heading {
+    margin-bottom: 32px;
+}
+
+.transfer-heading {
+    max-width: 720px;
+}
+
+.transfer-heading h1,
+.history-heading h1 {
+    margin: 6px 0 12px;
+    font-size: clamp(2rem, 5vw, 4rem);
+    line-height: 1;
+    letter-spacing: -0.055em;
+}
+
+.transfer-heading > p:last-child,
+.history-heading > div > p:last-child {
+    color: var(--muted-color, #67655d);
+    line-height: 1.8;
+}
+
+.transfer-layout {
+    display: grid;
+    grid-template-columns: minmax(260px, 0.85fr) minmax(0, 1.35fr);
+    gap: 24px;
+    align-items: stretch;
+}
+
+.balance-ticket,
+.transfer-form,
+.history-summary,
+.ledger-entry,
+.empty-ledger {
+    border: 1px solid rgba(31, 61, 49, 0.22);
+    background: #fffdf5;
+    box-shadow: 8px 8px 0 rgba(31, 61, 49, 0.08);
+}
+
+.balance-ticket {
+    position: relative;
+    padding: 34px 30px;
+    overflow: hidden;
+    background:
+        linear-gradient(
+            145deg,
+            rgba(225, 111, 70, 0.11),
+            transparent 45%
+        ),
+        #fff8e7;
+}
+
+.balance-ticket::before,
+.balance-ticket::after {
+    position: absolute;
+    right: -15px;
+    width: 30px;
+    height: 30px;
+    border: 1px solid rgba(31, 61, 49, 0.22);
+    border-radius: 50%;
+    background: var(--background-color, #f4f0e5);
+    content: "";
+}
+
+.balance-ticket::before {
+    top: 28%;
+}
+
+.balance-ticket::after {
+    bottom: 28%;
+}
+
+.ticket-label {
+    display: inline-block;
+    padding: 5px 9px;
+    border: 1px solid currentColor;
+    color: #a5472d;
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+}
+
+.ticket-owner {
+    margin: 36px 0 8px;
+    color: #67655d;
+}
+
+.ticket-balance {
+    display: block;
+    color: #1f3d31;
+    font-size: clamp(2rem, 4vw, 3.4rem);
+    letter-spacing: -0.06em;
+}
+
+.ticket-rule {
+    margin: 34px 0 24px;
+    border-top: 1px dashed rgba(31, 61, 49, 0.35);
+}
+
+.transfer-notice {
+    margin: 0;
+    padding-left: 18px;
+    color: #67655d;
+    font-size: 0.88rem;
+    line-height: 1.8;
+}
+
+.transfer-form {
+    padding: 34px;
+}
+
+.amount-input-wrap {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.amount-input-wrap input {
+    flex: 1;
+}
+
+.amount-input-wrap span {
+    font-weight: 800;
+}
+
+.transfer-form-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 28px;
+}
+
+.history-heading {
+    display: flex;
+    justify-content: space-between;
+    gap: 24px;
+    align-items: end;
+}
+
+.history-summary {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    align-items: center;
+    margin-bottom: 28px;
+    padding: 22px 26px;
+}
+
+.history-summary span {
+    color: #67655d;
+}
+
+.history-summary strong {
+    color: #1f3d31;
+    font-size: 1.5rem;
+}
+
+.transfer-ledger {
+    display: grid;
+    gap: 12px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.ledger-entry {
+    display: grid;
+    grid-template-columns: 48px minmax(0, 1fr) auto;
+    gap: 18px;
+    align-items: center;
+    padding: 22px 24px;
+}
+
+.ledger-mark {
+    display: grid;
+    width: 44px;
+    height: 44px;
+    place-items: center;
+    border-radius: 50%;
+    font-size: 1.5rem;
+    font-weight: 900;
+}
+
+.ledger-mark-sent {
+    color: #a5472d;
+    background: #ffe1cf;
+}
+
+.ledger-mark-received {
+    color: #1f5c45;
+    background: #dcebdc;
+}
+
+.ledger-title {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
+.ledger-memo {
+    margin: 7px 0;
+    color: #4f4c45;
+}
+
+.ledger-memo-empty {
+    color: #98948a;
+}
+
+.ledger-information time {
+    color: #8a867c;
+    font-size: 0.78rem;
+}
+
+.ledger-amount {
+    white-space: nowrap;
+    font-size: 1.1rem;
+}
+
+.ledger-amount-sent {
+    color: #a5472d;
+}
+
+.ledger-amount-received {
+    color: #1f5c45;
+}
+
+.empty-ledger {
+    padding: 64px 24px;
+    text-align: center;
+}
+
+.empty-ledger > span {
+    display: block;
+    margin-bottom: 16px;
+    color: #d56f4a;
+    font-size: 3rem;
+}
+
+.empty-ledger p {
+    margin-bottom: 26px;
+    color: #67655d;
+}
+
+@media (max-width: 760px) {
+    .transfer-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .history-heading {
+        align-items: start;
+        flex-direction: column;
+    }
+
+    .ledger-entry {
+        grid-template-columns: 42px minmax(0, 1fr);
+    }
+
+    .ledger-amount {
+        grid-column: 2;
+    }
+}

@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+
+{% block title %}주고받은 기록 | Tiny Market{% endblock %}
+
+{% block content %}
+<section class="transfer-history-page">
+    <header class="history-heading">
+        <div>
+            <p class="eyebrow">POCKET ARCHIVE</p>
+            <h1>주고받은 기록</h1>
+            <p>
+                내가 보낸 잔액과 받은 잔액을
+                시간순으로 확인할 수 있습니다.
+            </p>
+        </div>
+
+        <a
+            class="primary-button"
+            href="{{ url_for('transfers.create') }}"
+        >
+            잔액 보내기
+        </a>
+    </header>
+
+    <div class="history-summary">
+        <span>현재 가상 잔액</span>
+
+        <strong>
+            {{ "{:,}".format(current_user.balance) }}원
+        </strong>
+    </div>
+
+    {% if transfers %}
+        <ol class="transfer-ledger">
+            {% for transfer in transfers %}
+                {% set sent_by_me =
+                    transfer.sender_id == current_user.id
+                %}
+
+                {% if sent_by_me %}
+                    {% set counterpart = transfer.recipient %}
+                {% else %}
+                    {% set counterpart = transfer.sender %}
+                {% endif %}
+
+                <li class="ledger-entry">
+                    {% if sent_by_me %}
+                        <div
+                            class="ledger-mark ledger-mark-sent"
+                            aria-hidden="true"
+                        >
+                            −
+                        </div>
+                    {% else %}
+                        <div
+                            class="ledger-mark ledger-mark-received"
+                            aria-hidden="true"
+                        >
+                            ＋
+                        </div>
+                    {% endif %}
+
+                    <div class="ledger-information">
+                        <div class="ledger-title">
+                            <strong>
+                                {{ counterpart.display_name }}
+                            </strong>
+
+                            <span>
+                                {% if sent_by_me %}
+                                    님에게 보냄
+                                {% else %}
+                                    님에게 받음
+                                {% endif %}
+                            </span>
+                        </div>
+
+                        {% if transfer.memo %}
+                            <p class="ledger-memo">
+                                “{{ transfer.memo }}”
+                            </p>
+                        {% else %}
+                            <p class="ledger-memo ledger-memo-empty">
+                                작성한 메모가 없습니다.
+                            </p>
+                        {% endif %}
+
+                        <time
+                            datetime="{{ transfer.created_at.isoformat() }}"
+                        >
+                            {{ transfer.created_at | kst_datetime }}
+                        </time>
+                    </div>
+
+                    {% if sent_by_me %}
+                        <strong
+                            class="ledger-amount ledger-amount-sent"
+                        >
+                            − {{ "{:,}".format(transfer.amount) }}원
+                        </strong>
+                    {% else %}
+                        <strong
+                            class="ledger-amount ledger-amount-received"
+                        >
+                            ＋ {{ "{:,}".format(transfer.amount) }}원
+                        </strong>
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ol>
+    {% else %}
+        <div class="empty-ledger">
+            <span aria-hidden="true">↝</span>
+
+            <h2>아직 주고받은 기록이 없습니다.</h2>
+
+            <p>
+                첫 번째 가상 잔액을 안전하게 보내 보세요.
+            </p>
+
+            <a
+                class="primary-button"
+                href="{{ url_for('transfers.create') }}"
+            >
+                첫 잔액 보내기
+            </a>
+        </div>
+    {% endif %}
+</section>
+{% endblock %}
