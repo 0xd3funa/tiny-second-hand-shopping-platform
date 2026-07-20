@@ -45,9 +45,11 @@ def create_app(test_config=None):
     socketio.init_app(app)
 
     # 메인 페이지 Blueprint를 등록한다.
+    from app.auth import auth_bp
     from app.main import main_bp
 
     app.register_blueprint(main_bp)
+    app.register_blueprint(auth_bp)
 
     @app.after_request
     def add_security_headers(response):

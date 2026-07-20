@@ -72,3 +72,100 @@ body {
         padding: 28px;
     }
 }
+.navigation {
+    justify-content: space-between;
+    gap: 24px;
+}
+
+.nav-links {
+    display: flex;
+    gap: 16px;
+}
+
+.nav-links a {
+    color: var(--text);
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.form-card {
+    width: min(520px, 100%);
+    margin: 48px auto;
+    padding: 36px;
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    background: var(--surface);
+}
+
+.form-card h1 {
+    margin-block: 4px;
+    font-size: 2rem;
+}
+
+.form-description {
+    margin-bottom: 28px;
+    color: var(--muted);
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 700;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    color: var(--text);
+    font: inherit;
+}
+
+.form-group input:focus {
+    border-color: var(--primary);
+    outline: 3px solid rgb(22 120 77 / 15%);
+}
+
+.field-error {
+    margin-block: 6px 0;
+    color: #b42318;
+    font-size: 0.9rem;
+}
+
+.button {
+    width: 100%;
+    padding: 12px 18px;
+    border: 0;
+    border-radius: 10px;
+    background: var(--primary);
+    color: white;
+    font: inherit;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.flash-list {
+    margin-top: 20px;
+}
+
+.flash {
+    padding: 12px 16px;
+    border-radius: 10px;
+}
+
+.flash-success {
+    border: 1px solid #75c89c;
+    background: #eaf8ef;
+    color: #145c38;
+}
+
+.flash-error {
+    border: 1px solid #efaaa5;
+    background: #fff0ef;
+    color: #8f2119;
+}
