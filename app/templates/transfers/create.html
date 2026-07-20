@@ -6,9 +6,9 @@
 <section class="transfer-page">
     <header class="transfer-heading">
         <p class="eyebrow">VALUE TRANSFER · 다시장</p>
-        <h1>송금 내역</h1>
+        <h1>가상 잔액 송금</h1>
         <p>
-            내가 보낸 금액과 받은 금액을 시간순으로 확인합니다.
+            다른 사용자에게 가상 잔액을 안전하게 송금합니다.
         </p>
     </header>
 
@@ -33,23 +33,19 @@
             </ul>
         </aside>
 
-        <form
-            class="transfer-form"
-            method="post"
-            novalidate
-        >
+        <form class="transfer-form" method="post" novalidate>
             {{ form.hidden_tag() }}
 
             <div class="form-field">
                 {{ form.recipient_username.label }}
 
                 {{ form.recipient_username(
-                    autocomplete="off",
-                    placeholder="받는 사람의 아이디"
+                autocomplete="off",
+                placeholder="받는 사람의 아이디"
                 ) }}
 
                 {% for error in form.recipient_username.errors %}
-                    <p class="field-error">{{ error }}</p>
+                <p class="field-error">{{ error }}</p>
                 {% endfor %}
             </div>
 
@@ -58,16 +54,16 @@
 
                 <div class="amount-input-wrap">
                     {{ form.amount(
-                        min="1",
-                        max="1000000",
-                        inputmode="numeric",
-                        placeholder="보낼 금액"
+                    min="1",
+                    max="1000000",
+                    inputmode="numeric",
+                    placeholder="보낼 금액"
                     ) }}
                     <span>원</span>
                 </div>
 
                 {% for error in form.amount.errors %}
-                    <p class="field-error">{{ error }}</p>
+                <p class="field-error">{{ error }}</p>
                 {% endfor %}
             </div>
 
@@ -75,24 +71,21 @@
                 {{ form.memo.label }}
 
                 {{ form.memo(
-                    maxlength="100",
-                    autocomplete="off",
-                    placeholder="기억해 둘 짧은 메모"
+                maxlength="100",
+                autocomplete="off",
+                placeholder="기억해 둘 짧은 메모"
                 ) }}
 
                 {% for error in form.memo.errors %}
-                    <p class="field-error">{{ error }}</p>
+                <p class="field-error">{{ error }}</p>
                 {% endfor %}
             </div>
 
             <div class="transfer-form-actions">
                 {{ form.submit(class="primary-button") }}
 
-                <a
-                    class="primary-button"
-                    href="{{ url_for('transfers.create') }}"
-                >
-                    송금하기
+                <a class="secondary-button" href="{{ url_for('transfers.history') }}">
+                    송금 내역
                 </a>
             </div>
         </form>
