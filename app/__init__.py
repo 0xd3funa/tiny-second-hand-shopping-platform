@@ -70,6 +70,7 @@ def create_app(test_config=None):
     socketio.init_app(app)
 
     # 각 기능의 Blueprint를 등록한다.
+    from app.admin import admin_bp
     from app.auth import auth_bp
     from app.chat import chat_bp
     from app.main import main_bp
@@ -83,6 +84,7 @@ def create_app(test_config=None):
     app.register_blueprint(reports_bp)
     app.register_blueprint(transfers_bp)
     app.register_blueprint(chat_bp)
+    app.register_blueprint(admin_bp)
     
     @app.before_request
     def enforce_active_account():
