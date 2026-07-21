@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+
+{% block title %}신고 관리 | LOOPICK{% endblock %}
+
+{% block content %}
+<section class="admin-page">
+    <header class="admin-heading">
+        <p class="eyebrow">SAFETY REPORTS</p>
+        <h1>신고 관리</h1>
+        <p>접수된 신고 사유와 처리 상태를 관리합니다.</p>
+    </header>
+
+    {% include "admin/_nav.html" %}
+
+    <div class="admin-report-list">
+        {% for report in reports %}
+            <article class="admin-report-card">
+                <div class="admin-report-header">
+                    <div>
+                        <span class="status-badge">
+                            신고 #{{ report.id }}
+                        </span>
+
+                        {% if report.status == "pending" %}
+                            <span class="status-badge status-pending">
+                                검토 대기
+                            </span>
+                        {% elif report.status == "resolved" %}
+                            <span class="status-badge status-active">
+                                처리 완료
+                            </span>
+                        {% else %}
+                            <span class="status-badge">
+                                기각
+                            </span>
+                        {% endif %}
+                    </div>
+
+                    <time>
+                        {{ report.created_at | kst_datetime }}
+                    </time>
+                </div>
+
+                <dl class="admin-report-details">
+                    <div>
+                        <dt>신고자</dt>
+                        <dd>{{ report.reporter.display_name }}</dd>
+                    </div>
+
+                    <div>
+                        <dt>대상</dt>
+                        <dd>
+                            {% if report.target_user %}
+                                사용자:
+                                {{ report.target_user.display_name }}
+                            {% elif report.target_product %}
+                                상품:
+                                {{ report.target_product.name }}
+                            {% endif %}
+                        </dd>
+                    </div>
+                </dl>
+
+                <div class="admin-report-reason">
+                    <strong>신고 사유</strong>
+                    <p>{{ report.reason }}</p>
+                </div>
+
+                {% if report.status == "pending" %}
+                    <div class="admin-report-actions">
+                        <form
+                            method="post"
+                            action="{{ url_for(
+                                'admin.review_report',
+                                report_id=report.id
+                            ) }}"
+                        >
+                            <input
+                                type="hidden"
+                                name="csrf_token"
+                                value="{{ csrf_token() }}"
+                            >
+                            <input
+                                type="hidden"
+                                name="status"
+                                value="resolved"
+                            >
+                            <button
+                                class="danger-button"
+                                type="submit"
+                            >
+                                신고 인정·차단
+                            </button>
+                        </form>
+
+                        <form
+                            method="post"
+                            action="{{ url_for(
+                                'admin.review_report',
+                                report_id=report.id
+                            ) }}"
+                        >
+                            <input
+                                type="hidden"
+                                name="csrf_token"
+                                value="{{ csrf_token() }}"
+                            >
+                            <input
+                                type="hidden"
+                                name="status"
+                                value="dismissed"
+                            >
+                            <button
+                                class="secondary-button"
+                                type="submit"
+                            >
+                                신고 기각
+                            </button>
+                        </form>
+                    </div>
+                {% endif %}
+            </article>
+        {% else %}
+            <div class="empty-state">
+                접수된 신고가 없습니다.
+            </div>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

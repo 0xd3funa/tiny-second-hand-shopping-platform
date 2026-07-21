@@ -1,0 +1,137 @@
+{% extends "base.html" %}
+
+{% block title %}상품 관리 | LOOPICK{% endblock %}
+
+{% block content %}
+<section class="admin-page">
+    <header class="admin-heading">
+        <p class="eyebrow">PRODUCT MANAGEMENT</p>
+        <h1>상품 관리</h1>
+        <p>등록된 상품을 조회하고 차단 또는 복구합니다.</p>
+    </header>
+
+    {% include "admin/_nav.html" %}
+
+    <div class="admin-table-wrap">
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>상품명</th>
+                    <th>판매자</th>
+                    <th>가격</th>
+                    <th>상태</th>
+                    <th>등록일</th>
+                    <th>관리</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for product in products %}
+                    <tr>
+                        <td>{{ product.id }}</td>
+
+                        <td>
+                            <a
+                                class="admin-item-link"
+                                href="{{ url_for(
+                                    'products.detail',
+                                    product_id=product.id
+                                ) }}"
+                            >
+                                {{ product.name }}
+                            </a>
+                        </td>
+
+                        <td>{{ product.seller.display_name }}</td>
+                        <td>{{ "{:,}".format(product.price) }}원</td>
+
+                        <td>
+                            <span
+                                class="status-badge
+                                {% if product.status == 'blocked' %}
+                                    status-blocked
+                                {% else %}
+                                    status-active
+                                {% endif %}"
+                            >
+                                {% if product.status == "available" %}
+                                    판매 중
+                                {% elif product.status == "reserved" %}
+                                    예약 중
+                                {% elif product.status == "sold" %}
+                                    판매 완료
+                                {% else %}
+                                    차단
+                                {% endif %}
+                            </span>
+                        </td>
+
+                        <td>
+                            {{ product.created_at | kst_datetime("%Y-%m-%d") }}
+                        </td>
+
+                        <td>
+                            {% if product.status == "blocked" %}
+                                <form
+                                    method="post"
+                                    action="{{ url_for(
+                                        'admin.update_product_status',
+                                        product_id=product.id
+                                    ) }}"
+                                >
+                                    <input
+                                        type="hidden"
+                                        name="csrf_token"
+                                        value="{{ csrf_token() }}"
+                                    >
+                                    <input
+                                        type="hidden"
+                                        name="status"
+                                        value="available"
+                                    >
+                                    <button
+                                        class="secondary-button"
+                                        type="submit"
+                                    >
+                                        상품 복구
+                                    </button>
+                                </form>
+                            {% else %}
+                                <form
+                                    method="post"
+                                    action="{{ url_for(
+                                        'admin.update_product_status',
+                                        product_id=product.id
+                                    ) }}"
+                                >
+                                    <input
+                                        type="hidden"
+                                        name="csrf_token"
+                                        value="{{ csrf_token() }}"
+                                    >
+                                    <input
+                                        type="hidden"
+                                        name="status"
+                                        value="blocked"
+                                    >
+                                    <button
+                                        class="danger-button"
+                                        type="submit"
+                                    >
+                                        상품 차단
+                                    </button>
+                                </form>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="7">등록된 상품이 없습니다.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}

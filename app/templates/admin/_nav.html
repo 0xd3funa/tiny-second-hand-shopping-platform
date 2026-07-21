@@ -1,0 +1,39 @@
+<nav
+    class="admin-menu"
+    aria-label="관리자 메뉴"
+>
+    <a
+        class="{% if request.endpoint == 'admin.dashboard' %}active{% endif %}"
+        href="{{ url_for('admin.dashboard') }}"
+    >
+        대시보드
+    </a>
+
+    <a
+        class="{% if request.endpoint == 'admin.users' %}active{% endif %}"
+        href="{{ url_for('admin.users') }}"
+    >
+        사용자 관리
+    </a>
+
+    <a
+        class="{% if request.endpoint == 'admin.products' %}active{% endif %}"
+        href="{{ url_for('admin.products') }}"
+    >
+        상품 관리
+    </a>
+
+    <a
+        class="{% if request.endpoint == 'admin.reports' %}active{% endif %}"
+        href="{{ url_for('admin.reports') }}"
+    >
+        신고 관리
+    </a>
+
+    <a
+        class="{% if request.endpoint == 'admin.activity' %}active{% endif %}"
+        href="{{ url_for('admin.activity') }}"
+    >
+        채팅·송금 기록
+    </a>
+</nav>

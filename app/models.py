@@ -245,7 +245,6 @@ class Product(db.Model):
     def __repr__(self):
         return f"<Product id={self.id} name={self.name!r}>"
 
-
 class Report(db.Model):
     __tablename__ = "reports"
 
@@ -264,6 +263,11 @@ class Report(db.Model):
             )
             """,
             name="ck_reports_exactly_one_target",
+        ),
+        # 신고는 대기, 처리 완료, 기각 상태만 가질 수 있다.
+        db.CheckConstraint(
+            "status IN ('pending', 'resolved', 'dismissed')",
+            name="ck_reports_status",
         ),
         # 같은 사용자가 같은 사용자를 중복 신고하지 못하게 한다.
         db.UniqueConstraint(
@@ -319,6 +323,20 @@ class Report(db.Model):
         nullable=False,
     )
 
+    # 관리자가 아직 검토하지 않은 신고는 pending으로 저장한다.
+    status = db.Column(
+        db.String(10),
+        nullable=False,
+        default="pending",
+        server_default="pending",
+    )
+
+    # 관리자가 신고를 처리하거나 기각한 시간을 기록한다.
+    reviewed_at = db.Column(
+        db.DateTime(timezone=True),
+        nullable=True,
+    )
+
     created_at = db.Column(
         db.DateTime(timezone=True),
         nullable=False,
@@ -353,9 +371,10 @@ class Report(db.Model):
     def __repr__(self):
         return (
             f"<Report id={self.id} "
-            f"target_type={self.target_type!r}>"
+            f"target_type={self.target_type!r} "
+            f"status={self.status!r}>"
         )
-    
+
 class Transfer(db.Model):
     __tablename__ = "transfers"
 

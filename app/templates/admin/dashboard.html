@@ -8,10 +8,12 @@
         <p class="eyebrow">LOOPICK CONTROL CENTER</p>
         <h1>관리자 센터</h1>
         <p>
-            LOOPICK의 사용자, 상품, 신고 및 거래 현황을
+            사용자, 상품, 신고, 채팅 및 송금 기록을
             안전하게 관리합니다.
         </p>
     </header>
+
+    {% include "admin/_nav.html" %}
 
     <div class="admin-statistics">
         <article class="admin-stat-card">
@@ -39,9 +41,9 @@
             <strong>{{ statistics.blocked_products }}</strong>
         </article>
 
-        <article class="admin-stat-card">
-            <span>접수 신고</span>
-            <strong>{{ statistics.reports }}</strong>
+        <article class="admin-stat-card admin-stat-warning">
+            <span>검토 대기 신고</span>
+            <strong>{{ statistics.pending_reports }}</strong>
         </article>
 
         <article class="admin-stat-card">
@@ -54,16 +56,5 @@
             <strong>{{ statistics.chat_messages }}</strong>
         </article>
     </div>
-
-    <section class="admin-notice">
-        <p class="eyebrow">ADMINISTRATOR ONLY</p>
-        <h2>관리 원칙</h2>
-
-        <ul>
-            <li>모든 관리 작업은 관리자 권한을 다시 검사합니다.</li>
-            <li>사용자 상태 변경은 필요한 경우에만 수행합니다.</li>
-            <li>신고와 거래 기록은 감사 목적으로 보존합니다.</li>
-        </ul>
-    </section>
 </section>
 {% endblock %}
