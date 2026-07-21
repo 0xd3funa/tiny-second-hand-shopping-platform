@@ -1,9 +1,11 @@
-# tiny-second-hand-shopping-platform
-[WHS4]_정은아(7624) 
-
 # LOOPICK
 
 > 안전한 중고거래 플랫폼
+
+- 과제명: Tiny Second-hand Shopping Platform
+- 과정: WHS 4기
+- 작성자: 정은아 (7624)
+- GitHub: https://github.com/0xd3funa/tiny-second-hand-shopping-platform
 
 LOOPICK은 사용자가 상품을 등록하고 검색하며, 다른 사용자와 채팅하고 가상 잔액을 송금할 수 있는 Flask 기반 중고거래 웹 애플리케이션입니다.
 
